@@ -2,10 +2,10 @@
 
 Overview
 
-    The LoopAnalysisML framework is a plugin of LLVM version (3.8) and consists of
-    one LLVM Analysis Pass: Region Identification Pass, Basic Block Identification Pass and Functions 
-    Identification Pass. In addition to those a Basic Block Frequency Annotation Pass is used. The 
-    final goal is to  Identify the most efficient Regions that are going to be implemented into Hardware.
+    The LoopAnalysisML framework is a plugin of LLVM version (3.8) and consists of an LLVM Analysis Pass that 
+    analyzes loops and extracts information regarding their loop unrolling potentian in hardware realizations 
+    (hardware accelerators). The goal is to use this information as X features to train a Machine Learning 
+    classifier in order to perform prediction on the optimal loop unrolling factor of each loop.
 
     The process is as follows:
 
