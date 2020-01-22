@@ -2,8 +2,8 @@
 
 Overview
 
-    The LoopAnalysisML framework is a plugin of LLVM version (3.8) and consists of an LLVM Analysis Pass that 
-    analyzes loops and extracts information regarding their loop unrolling potentian in hardware realizations 
+    The LoopAnalysisML© framework is a plugin of LLVM version (3.8) and consists of an LLVM Analysis Pass that 
+    analyzes loops and extracts information regarding their loop unrolling potential in hardware realizations 
     (hardware accelerators). The goal is to use this information as X features to train a Machine Learning 
     classifier in order to perform prediction on the optimal loop unrolling factor of each loop.
 
@@ -39,22 +39,13 @@ Overview
         Now every Basic Block has the respective frequency annotated in the output *.bbfreq.ll files.
         This information is going to be used next.
 
-         opt -load ~giorgio/llvm_new/build/lib/IdentifyRegions.so -IdentifyRegions -stats *.bbfreq.ll > /dev/null 
+         opt -load ~giorgio/llvm_new/build/lib/IdentifyLoopUnrolling.so -IdentifyLoopUnrolling -stats *.bbfreq.ll > /dev/null 
 
         
         The output from loading this pass provides us with a full analysis of the Regions. For more details see
         Region Identification Pass bellow.
 
 
-    c) Region Selection
-
-       Region Selection is performed by using two algorithsms.
-
-       1) Exact
-
-       2) Greedy 
- 
- 
  Makefiles
 
     There is a Makefile_region file for every benchmark that needs minor modifications
@@ -64,18 +55,6 @@ Overview
     Makefile_orig is simply a copy of the original Makefile, wich has been slightly modified
     to use the Makefile_region. (to include the Makefile_Region) 
 
-
-    
-    profile
-
-        The profile rule compiles all the needed objects and generates the instrumented
-        version of the binary. Using the the bench.profdata file generated, the respective
-        *.ir files are produced with the initial profiling annotation.
-
-
-        e.g.
-        
-        make -f Makefile_orig profile
        
     region
 
@@ -87,52 +66,6 @@ Overview
         e.g.
         
         make -f Makefile_orig region
-
-    cfg_region
-        
-        Produces the CFG Regions graphs in pdf format.
-
-    sort_regions
-        
-        Runs the shell script that executes make region, gets the relevant information for each Region
-        and sorts them out according to density.
-
-        e.g. 
-
-            Good 576912 Dens 3898 Func BlockSAD Reg for.body6 => for.inc120 I 38 O 0 Loads 16 Stores 1
-            Good 30906  Dens 2207 Func main Reg for.body3 => for.inc16 I 4 O 0 Loads 0 Stores 2 
-
-
-
-Region Identification Pass
-    
-    The Region Identification pass is loaded to Identify Single-Input, Single-Output 
-    Regions in a CFG of an application and computes the Data Flow Input and Output 
-    for each Region.
-
-    The key characteristics that are identified are:
-
-    a) Regions   : Single-Input, Single-Output Regions in a CFG.
-    b) Input     : Data Flow Input number of instances. (Instructions)
-    c) Output    : Data Flow Output number of instances. (Instructions)
-    d) BBs       : Number of Basic Blocks in a Region.
-    e) DFG Nodes : Number of DFG Nodes in a Region. (Instructions)
-
-    Input  : Total nuber of bytes the region needs as input. (bitwidth)
-    Output : Total nuber of bytes flowing from the region as output.
-
-
-    Static - Dynamic Classification
-
-      1) # of Iterations of a loop
-      2) # of Accesses inside a loop
-      3) Overall Access Pattern (Static for now.)
-
-
-    Input format
-        
-        Identification pass expects as input the generated .ll files (LLVM-IR) from the respe-
-        ctive source files of the application.
 
 
 Usage
